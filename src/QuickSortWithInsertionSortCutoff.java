@@ -1,6 +1,6 @@
 
 public class QuickSortWithInsertionSortCutoff extends QuickSort{
-
+	
 	@Override
 	public void sort(int[] A, int p, int r) {
 		sort(A,p,r,15);
