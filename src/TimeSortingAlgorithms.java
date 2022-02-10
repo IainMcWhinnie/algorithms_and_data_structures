@@ -4,7 +4,7 @@ public class TimeSortingAlgorithms {
 	public static void main(String[] args) {
 		System.out.println("Timing Sorting Algorithms");
 		
-		int[] testArray = ArrayFromFile.getFromPath(Paths.get(".\\int1000.txt"));
+		int[] testArray = ArrayFromFile.getFromPath(Paths.get(".\\int20k.txt"));
 		//int[] testArray = {6, 5, 0, 4, 1, 8, 3, 4, 4, 2, 5, 6, 4, 6, 5};
 		
 		System.out.println("Testing array of size "+testArray.length);
