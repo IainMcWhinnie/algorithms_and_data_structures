@@ -19,4 +19,5 @@ public class TestSortingAlgorithms {
 		sortAlg.sort(cloneArray, 0, cloneArray.length-1);
 		return assertSortedAsc(cloneArray);
 	}
+	
 }
