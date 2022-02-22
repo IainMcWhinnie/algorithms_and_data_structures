@@ -61,7 +61,7 @@ public class AssessedExerciseOne {
 		
 		SortingAlgorithm insertionSort = new InsertionSort();
 		System.out.println("\nInsertion Sort Test");
-		//testAlgorithm(insertionSort); // WARNING: THIS CAN TAKE SOME TIME!!
+		testAlgorithm(insertionSort); // WARNING: THIS CAN TAKE SOME TIME!!
 		
 		System.out.println();
 	}
