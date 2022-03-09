@@ -177,7 +177,7 @@ public class BST {
 	public boolean checkBST(Node x) {
 		
 		
-		
+		c
 		if (x.left != null && x.left.key > x.key) {
 			return false;
 		}
