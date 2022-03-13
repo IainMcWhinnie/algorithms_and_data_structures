@@ -1,25 +1,31 @@
 package dataStructures;
 
-public class ArrayMinHeap<Item extends Comparable> {
-	private Item[] h;
-	private int head;
+public class ArrayMinHeap {
+	private int[] h;
 	private int tail;
-	private int n;
 	
 	public ArrayMinHeap() {
-		h = (Item[]) new Object[2];
-		head = 0;
+		h = new int[2];
 		tail = 0;
 	}
 	
-	public void insert(Item x) {
-		if (n == h.length) {
+	public void insert(int x) {
+		if (tail >= h.length) {
 			resize(2*h.length);
 		}
-		tail = (tail+1)%h.length;
+		
 		h[tail] = x;
-		n++;
-		minHeapify(tail);
+		
+		int nodeToFix = tail;
+		int parentOfFix = parent(nodeToFix);
+		
+		while (h[parentOfFix] > h[nodeToFix]) {
+			swap(parentOfFix, nodeToFix);
+			nodeToFix = parent(nodeToFix);
+			parentOfFix = parent(nodeToFix);
+		}
+		
+		tail++;
 	}
 	
 	public int left(int i) {
@@ -30,16 +36,20 @@ public class ArrayMinHeap<Item extends Comparable> {
 		return (2*i)+2;
 	}
 	
+	public int parent(int i) {
+		return i/2;
+	}
+	
 	public void minHeapify(int i) {
 		int smallest;
 		int l = left(i);
 		int r = right(i);
-		if (l < n && h[l].compareTo(h[i])<0 ) {
+		if (l < tail && h[l]<h[i]) {
 			smallest = l;
 		}else {
 			smallest = i;
 		}
-		if (r < n && h[r].compareTo(h[largest]) < 0) {
+		if (r < tail && h[r] < h[smallest]) {
 			smallest = r;
 		}
 		if (smallest != i) {
@@ -48,38 +58,67 @@ public class ArrayMinHeap<Item extends Comparable> {
 		}
 	}
 	
+	public void print() {
+		System.out.print("Heap: ");
+		for (int i=0; i<tail; i++) {
+			System.out.print(h[i]+",");
+		}
+		System.out.print(" (arraysize: "+h.length+" )");
+		System.out.println();
+	}
+	
 	public void swap(int index1, int index2) {
-		Item tmp = h[index2];
+		int tmp = h[index2];
 		h[index2] = h[index1];
 		h[index1] = tmp;
 	}
 	
-	public Item min() {
-		return null;
+	public int min() {
+		return h[0];
 	}
 	
-	public Item extractMin() {
-		return null;
+	public int extractMin() {
+		int minEl = h[0];
+		
+		int lastEl = tail-1;
+		h[0] = h[lastEl];
+		tail--;
+		minHeapify(0);
+		
+		if ((tail-1)*4 < h.length) {
+			resize(h.length/2);
+		}
+	
+		return minEl;
 	}
 	
 	public void resize(int newSize) {
-		Item[] newH = (Item[]) new Object[newSize];
-		for (int i=0; i<n; i++) {
-			newH[i] = h[(head+i)%newSize];
+		int[] newH = new int[newSize];
+		for (int i=0; i<tail; i++) {
+			newH[i] = h[i];
 		}
 		h = newH;
-		head = 0;
-		tail = n-1;
+	}
+	
+	public static ArrayMinHeap buildMinHeap(int[] input) {
+		ArrayMinHeap newHeap = new ArrayMinHeap();
+		for (int el: input) {
+			newHeap.insert(el);
+		}
+		return newHeap;
 	}
 	
 	public static void main(String[] args) {
-		int[] test = {1,4,2,65,3,6,3,6,3,56,8,2,8,9};
-		ArrayMinHeap<Integer> heap = new ArrayMinHeap<>();
+		int[] test = {5, 3, 8, 234, 45, 7, 2345, 94, 23567};
+		ArrayMinHeap heap = buildMinHeap(test);
 		
-		
-		for (int el: test) {
-			heap.insert(el);
+		for (int i=0; i<test.length; i++) {
+			heap.print();
+			System.out.println(heap.min());
+			System.out.println(heap.extractMin());
 		}
-		System.out.print(heap.h);
+		
+		heap.print();
+		
 	}
 }

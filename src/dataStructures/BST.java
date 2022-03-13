@@ -1,20 +1,14 @@
 package dataStructures;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 public class BST {
 	private Node root;
 	
 	private class Node{
 		private int key;
 		private Node left, right, p;
-		private int size;
 		
-		public Node(int key, int size) {
+		public Node(int key) {
 			this.key = key;
-			this.size = size;
 			
 			this.left = null;
 			this.right = null;
@@ -29,7 +23,7 @@ public class BST {
 	public void insert(int zKey) {
 		Node y = null;
 		Node x = root;
-		Node z = new Node(zKey, 1);
+		Node z = new Node(zKey);
 		
 		while (x != null) {
 			y = x;
@@ -135,60 +129,12 @@ public class BST {
 		}
 	}
 	
-	public String level(Node[] nodes) {
-		if (nodes.length == 0) {
-			return "";
-		}
-		
-		String out = "";
-		int noNodes = 0;
-		List<Node> children = new ArrayList<>();
-		for (Node node: nodes) {
-			
-			if (node != null) {
-				out += " "+Integer.toString(node.key)+" ";
-				children.add(node.left);
-				children.add(node.right);
-				noNodes ++;
-			}else {
-				out += " ".repeat(3);
-				children.add(null);
-			}
-		}
-		if (noNodes == 0) {
-			return "";
-		}
-		return out+"\n"+level(children.toArray(new Node[children.size()]));
+
+	public Node extractMin() {
+		Node minNode = min(root);
+		delete(minNode);
+		return minNode;
 	}
-	
-	public void print() {
-		Node[] t = {root};
-		System.out.println(level(t));
-	}
-	
-	public boolean checkGreater(Node x, int value) {
-		
-	}
-	
-	public boolean checkLesser(Node x, int value) {
-		
-	}
-	
-	public boolean checkBST(Node x) {
-		
-		
-		c
-		if (x.left != null && x.left.key > x.key) {
-			return false;
-		}
-		if (x.right != null && x.right.key < x.key) {
-			return false;
-		}
-		
-		
-		return true;
-	}
-	
 	
 	public static void main(String args[]) {
 		BST x = new BST();
@@ -196,10 +142,10 @@ public class BST {
 		for (int i: test) {
 			x.insert(i);
 		}
-		x.print();
 		System.out.println(x.size(x.root));
 		x.inOrder(x.root);
 		x.preOrder(x.root);
 		x.postOrder(x.root);
+		
 	}
 }
