@@ -1,23 +1,24 @@
 package dataStructures;
+import dataStructures.minPriorityQueue;
 
-
-public class BST implements minPriorityQueue {
-	protected Node root;
+public class BSTExtension implements minPriorityQueue {
+	private Node root;
+	private Node min;
 	
-	protected class Node{
-		protected int key;
-		protected Node left, right, p;
+	private class Node{
+		private int key;
+		private Node left, right, p, succ;
 		
 		public Node(int key) {
 			this.key = key;
-			
 			this.left = null;
 			this.right = null;
 			this.p = null;
+			this.succ = null;
 		}
 	}
 	
-	public BST() {
+	public BSTExtension() {
 		root = null;
 	}
 	
@@ -26,6 +27,13 @@ public class BST implements minPriorityQueue {
 		Node x = root;
 		Node z = new Node(zKey);
 		
+		// Check if the insert number is the new minimum
+		if (min == null || zKey < min.key) {
+			min = z;
+		}
+	
+		// Find the space to insert x
+		// and keep y as a pointer to the parent
 		while (x != null) {
 			y = x;
 			if (z.key < x.key) {
@@ -34,6 +42,8 @@ public class BST implements minPriorityQueue {
 				x = x.right;
 			}
 		}
+		
+		// Insert the new node
 		z.p = y;
 		if (y == null) {
 			root = z;
@@ -42,17 +52,21 @@ public class BST implements minPriorityQueue {
 		}else {
 			y.right = z;
 		}
+		
+		successorify(root, null);
+		
 	}
 	
-	public Node search(Node x, int k) {
-		if (x == null || k == x.key) {
-			return x;
+	public Node successorify(Node x, Node prev) {
+		if (x != null) {
+			prev = successorify(x.left, prev);
+			if (prev != null) {
+				prev.succ = x;
+			}
+			prev = x;
+			prev = successorify(x.right, prev);
 		}
-		if (k < x.key) {
-			return search(x.left, k);
-		}else {
-			return search(x.right, k);
-		}
+		return prev;
 	}
 	
 	public Node getMinNode(Node x) {
@@ -63,9 +77,8 @@ public class BST implements minPriorityQueue {
 	}
 	
 	public int min() {
-		Node minNode = getMinNode(root);
-		if (minNode != null) {
-			return getMinNode(root).key;
+		if (min != null) {
+			return min.key;
 		}else {
 			return -1;
 		}
@@ -75,8 +88,12 @@ public class BST implements minPriorityQueue {
 		if (root == null) {
 			return -1;
 		}
-		Node minNode = getMinNode(root);
+		Node minNode = min;
+		
+		// Set the new minimum as the parent of the old minimum
+		min = minNode.succ;
 		transplant(minNode, minNode.right);
+		
 		return minNode.key;
 	}
 	
@@ -111,54 +128,18 @@ public class BST implements minPriorityQueue {
 		}
 		
 	}
-	
-	public int size(Node n) {
-		 int size = 0;
-		 
-		 if (n.left != null) {
-			 size += size(n.left);
-		 }
-		 if (n.right != null) {
-			 size += size(n.right);
-		 }
-		 return size+1;	
-	}
-	
-	public void inOrder(Node x) {
-		if (x!= null) {
-			inOrder(x.left);
-			System.out.print(x.key);
-			inOrder(x.right);
-		}
-	}
-	
-	public void preOrder(Node x) {
-		if (x!= null) {
-			System.out.print(x.key);
-			inOrder(x.left);
-			inOrder(x.right);
-		}
-	}
 
-	public void postOrder(Node x) {
-		if (x!= null) {
-			inOrder(x.left);
-			inOrder(x.right);
-			System.out.print(x.key);
-		}
-	}
-	
 	
 	public static void main(String args[]) {
-		BST x = new BST();
-		int[] test = {5,4,6,7,1,2,3,8};
+		BSTExtension x = new BSTExtension();
+		int[] test = {3,2,2,7,8,4};
 		for (int i: test) {
 			x.insert(i);
 		}
-		System.out.println(x.size(x.root));
-		x.inOrder(x.root);
-		x.preOrder(x.root);
-		x.postOrder(x.root);
-		
+		int extracted = x.extractMin();
+		while (extracted != -1) {	
+			System.out.println("Extracted "+extracted);
+			extracted = x.extractMin();
+		}
 	}
 }

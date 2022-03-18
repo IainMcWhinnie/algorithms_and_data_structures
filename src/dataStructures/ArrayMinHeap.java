@@ -1,6 +1,7 @@
 package dataStructures;
 
-public class ArrayMinHeap {
+
+public class ArrayMinHeap implements minPriorityQueue{
 	private int[] h;
 	private int tail;
 	
@@ -74,21 +75,28 @@ public class ArrayMinHeap {
 	}
 	
 	public int min() {
-		return h[0];
+		if (tail != 0) {
+			return h[0];
+		}else {
+			return -1;
+		}
 	}
 	
 	public int extractMin() {
-		int minEl = h[0];
+		int minEl = min();
 		
-		int lastEl = tail-1;
-		h[0] = h[lastEl];
-		tail--;
-		minHeapify(0);
+		if (minEl != -1) {
 		
-		if ((tail-1)*4 < h.length) {
-			resize(h.length/2);
+			int lastEl = tail-1;
+			h[0] = h[lastEl];
+			tail--;
+			minHeapify(0);
+			
+			if (tail >= 4 && (tail-1)*4 < h.length) {
+				resize(h.length/2);
+			}
 		}
-	
+		
 		return minEl;
 	}
 	
@@ -109,7 +117,7 @@ public class ArrayMinHeap {
 	}
 	
 	public static void main(String[] args) {
-		int[] test = {5, 3, 8, 234, 45, 7, 2345, 94, 23567};
+		int[] test = {4, 5, 7, 2, 9, 10, 23, 244, 2, 1, 2323, 3};
 		ArrayMinHeap heap = buildMinHeap(test);
 		
 		for (int i=0; i<test.length; i++) {
